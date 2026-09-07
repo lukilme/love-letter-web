@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "lint:fix": "eslint --fix .",
+    "lint:warn": "eslint .",
+    "dev": "next dev -H 0.0.0.0",
+    "deploy": "next deploy",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
