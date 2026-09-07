@@ -21,8 +21,6 @@ export const metadata: Metadata = {
   description: "Aplicação Love Letter Web",
 };
 
-// Script inline executado antes da hidratação para evitar flash de tema errado.
-// dangerouslySetInnerHTML é necessário aqui — não há alternativa para scripts inline no SSR.
 const themeScript = `
 (function () {
   try {
@@ -42,7 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
-        {/* eslint-disable-next-line react/no-danger */}
+        { }
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="min-h-full flex flex-col bg-[var(--color-background)] text-[var(--color-text)]">

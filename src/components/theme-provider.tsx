@@ -22,7 +22,6 @@ const STORAGE_KEY = "theme";
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
   console.log(theme)
-  // Lê localStorage e preferência do sistema após hidratar
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === "dark" || stored === "light") {
@@ -35,7 +34,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Aplica a classe .dark no <html> e persiste
   useEffect(() => {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");

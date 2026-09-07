@@ -1,3 +1,4 @@
+import ServidoresTable from "@/components/ServidoresTable";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
@@ -6,6 +7,7 @@ export default function Home() {
       <h1 className="text-2xl font-semibold text-[var(--color-text)]">
         Love Letter Web
       </h1>
+      <ServidoresTable/>
       <ThemeToggle />
     </main>
   );
