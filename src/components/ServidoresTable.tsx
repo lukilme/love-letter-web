@@ -37,28 +37,26 @@ export default function ServidoresTable() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center p-6 bg-red-50 rounded-lg border border-red-200">
+      <div className="flex items-center justify-center min-h-screen px-4">
+        <div className="text-center p-6 bg-red-50 rounded-lg border border-red-200 max-w-sm w-full">
           <p className="text-red-700 font-semibold mb-2">Erro ao carregar dados</p>
-          <p className="text-red-600">{error}</p>
+          <p className="text-red-600 text-sm">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4 py-6 sm:px-6">
       <div className="max-w-7xl mx-auto">
 
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl font-bold text-slate-900 sm:text-4xl mb-1 sm:mb-2">
             Portal de Transparência
           </h1>
-          <p className="text-slate-600">
+          <p className="text-sm text-slate-600 sm:text-base">
             Dados públicos de servidores —{" "}
-            <span className="font-semibold text-slate-700">
-              {filteredData.length}
-            </span>{" "}
+            <span className="font-semibold text-slate-700">{filteredData.length}</span>{" "}
             registro{filteredData.length !== 1 ? "s" : ""} encontrado
             {filteredData.length !== 1 ? "s" : ""}
           </p>

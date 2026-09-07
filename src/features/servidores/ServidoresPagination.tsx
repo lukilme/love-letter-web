@@ -24,50 +24,83 @@ export function ServidoresPagination({
     return currentPage - 2 + i;
   });
 
+  const end = Math.min(startIndex + ITEMS_PER_PAGE, totalCount);
+
   return (
-    <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-between">
-      <p className="text-sm text-slate-600">
-        Mostrando{" "}
-        <span className="font-semibold">{startIndex + 1}</span> a{" "}
-        <span className="font-semibold">
-          {Math.min(startIndex + ITEMS_PER_PAGE, totalCount)}
-        </span>{" "}
-        de <span className="font-semibold">{totalCount}</span> registros
-      </p>
+    <div className="border-t border-slate-200 bg-slate-50 px-4 sm:px-6 py-3 sm:py-4">
 
-      <div className="flex gap-2">
-        <button
-          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-          disabled={currentPage === 1}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          Anterior
-        </button>
-
-        {pageNumbers.map((page) => (
+      <div className="flex flex-col items-center gap-3 sm:hidden">
+        <p className="text-xs text-slate-600">
+          <span className="font-semibold">{startIndex + 1}</span>–
+          <span className="font-semibold">{end}</span>{" "}
+          de <span className="font-semibold">{totalCount}</span>
+        </p>
+        <div className="flex items-center gap-3">
           <button
-            key={page}
-            onClick={() => onPageChange(page)}
-            className={`px-3 py-2 rounded-lg font-medium transition ${
-              currentPage === page
-                ? "bg-blue-600 text-white"
-                : "border border-slate-300 text-slate-700 hover:bg-slate-100"
-            }`}
+            onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-slate-300 text-sm text-slate-700 font-medium hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
           >
-            {page}
+            <ChevronLeft className="h-4 w-4" />
+            Anterior
           </button>
-        ))}
-
-        <button
-          onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-          disabled={currentPage === totalPages}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
-        >
-          Próxima
-          <ChevronRight className="h-4 w-4" />
-        </button>
+          <span className="text-sm text-slate-600 font-medium">
+            {currentPage} / {totalPages}
+          </span>
+          <button
+            onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-slate-300 text-sm text-slate-700 font-medium hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            Próxima
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
       </div>
+
+      <div className="hidden sm:flex items-center justify-between">
+        <p className="text-sm text-slate-600">
+          Mostrando{" "}
+          <span className="font-semibold">{startIndex + 1}</span> a{" "}
+          <span className="font-semibold">{end}</span>{" "}
+          de <span className="font-semibold">{totalCount}</span> registros
+        </p>
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Anterior
+          </button>
+
+          {pageNumbers.map((page) => (
+            <button
+              key={page}
+              onClick={() => onPageChange(page)}
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
+                currentPage === page
+                  ? "bg-blue-600 text-white"
+                  : "border border-slate-300 text-slate-700 hover:bg-slate-100"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            Próxima
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+
     </div>
   );
 }

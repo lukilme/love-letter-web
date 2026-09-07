@@ -8,6 +8,7 @@ export type Servidor = {
   orgaoLotacao: string;
   dataAdmissao: string;
   regimeContratual: string;
+  matricula: string;
 };
 
 export type FilterOptions = {

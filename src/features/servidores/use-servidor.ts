@@ -2,22 +2,20 @@ import { useEffect, useState } from "react";
 import * as duckdb from "@duckdb/duckdb-wasm";
 import type { Servidor } from "@/types/servidor";
 
-type UseServidoresResult = {
-  data: Servidor[];
-  situacoes: string[];
-  regimes: string[];
+type UseServidorResult = {
+  servidor: Servidor | null;
   loading: boolean;
   error: string | null;
 };
 
-export function useServidores(): UseServidoresResult {
-  const [data, setData] = useState<Servidor[]>([]);
-  const [situacoes, setSituacoes] = useState<string[]>([]);
-  const [regimes, setRegimes] = useState<string[]>([]);
+export function useServidor(matricula: string): UseServidorResult {
+  const [servidor, setServidor] = useState<Servidor | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!matricula) return;
+
     async function load() {
       try {
         setLoading(true);
@@ -39,34 +37,31 @@ export function useServidores(): UseServidoresResult {
         const buffer = await response.arrayBuffer();
         await db.registerFileBuffer("dados.parquet", new Uint8Array(buffer));
 
-        const result = await conn.query(`
+        const stmt = await conn.prepare(`
           SELECT
+            matricula,
             nomeServidor,
             cpfServidor,
             nomeCargo,
             situacaoServidor,
-            CAST(valorBruto AS VARCHAR)    AS valorBruto,
-            CAST(valorLiquido AS VARCHAR)  AS valorLiquido,
+            CAST(valorBruto   AS VARCHAR) AS valorBruto,
+            CAST(valorLiquido AS VARCHAR) AS valorLiquido,
             orgaoLotacao,
-            CAST(dataAdmissao AS VARCHAR)  AS dataAdmissao,
-            regimeContratual,
-            matricula
+            CAST(dataAdmissao AS VARCHAR) AS dataAdmissao,
+            regimeContratual
           FROM read_parquet('dados.parquet')
+          WHERE matricula = ?
+          LIMIT 1
         `);
 
-        const servidores = result.toArray() as Servidor[];
-        setData(servidores);
+        const result = await stmt.query(matricula);
+        const rows = result.toArray() as Servidor[];
 
-        setSituacoes(
-          Array.from(
-            new Set(servidores.map((s) => s.situacaoServidor).filter(Boolean))
-          ).sort()
-        );
-        setRegimes(
-          Array.from(
-            new Set(servidores.map((s) => s.regimeContratual).filter(Boolean))
-          ).sort()
-        );
+        if (rows.length === 0) {
+          setError("Servidor não encontrado");
+        } else {
+          setServidor(rows[0]);
+        }
 
         setError(null);
       } catch (err) {
@@ -78,7 +73,7 @@ export function useServidores(): UseServidoresResult {
     }
 
     load();
-  }, []);
+  }, [matricula]);
 
-  return { data, situacoes, regimes, loading, error };
+  return { servidor, loading, error };
 }
