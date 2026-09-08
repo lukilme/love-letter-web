@@ -9,18 +9,10 @@ type Props = {
   matricula: string;
 };
 
-type FieldProps = {
-  label: string;
-  value: string;
-  mono?: boolean;
-};
-
-function Field({ label, value, mono = false }: FieldProps) {
+function Field({ label, value, mono = false }: { label: string; value?: string | null; mono?: boolean }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">
-        {label}
-      </dt>
+      <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</dt>
       <dd className={`text-sm text-slate-900 ${mono ? "font-mono" : "font-medium"}`}>
         {value || "—"}
       </dd>
@@ -28,12 +20,7 @@ function Field({ label, value, mono = false }: FieldProps) {
   );
 }
 
-type SectionProps = {
-  title: string;
-  children: React.ReactNode;
-};
-
-function Section({ title, children }: SectionProps) {
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="px-5 py-3 border-b border-slate-100 bg-slate-50">
@@ -64,10 +51,7 @@ export function ServidorDetail({ matricula }: Props) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 px-4">
         <p className="text-red-600 font-medium">{error ?? "Servidor não encontrado"}</p>
-        <Link
-          href="/"
-          className="text-sm text-blue-600 hover:underline flex items-center gap-1"
-        >
+        <Link href="/" className="text-sm text-blue-600 hover:underline flex items-center gap-1">
           <ChevronLeft className="h-4 w-4" />
           Voltar à listagem
         </Link>
@@ -75,43 +59,79 @@ export function ServidorDetail({ matricula }: Props) {
     );
   }
 
+  const s = servidor;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4 py-6 sm:px-6">
       <div className="max-w-4xl mx-auto space-y-5">
 
-        <div>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Voltar à listagem
-          </Link>
-        </div>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 transition-colors"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Voltar à listagem
+        </Link>
 
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm px-5 py-5 sm:py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="min-w-0">
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
-              {servidor.nomeServidor}
+              {s.nomeServidor}
             </h1>
-            <p className="mt-1 text-sm text-slate-500 font-mono">{servidor.cpfServidor}</p>
+            <p className="mt-1 text-sm text-slate-500 font-mono">{s.cpfServidor}</p>
           </div>
-          <span className="self-start sm:self-auto flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-            {servidor.situacaoServidor}
-          </span>
+          <div className="flex flex-wrap gap-2 sm:flex-col sm:items-end">
+            <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+              {s.situacaoServidor}
+            </span>
+            {s.ehAposentado === "true" || s.ehAposentado === "1" ? (
+              <span className="px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800">
+                Aposentado
+              </span>
+            ) : null}
+          </div>
         </div>
 
-        <Section title="Vínculo funcional">
-          <Field label="Matrícula" value={servidor.matricula} mono />
-          <Field label="Cargo" value={servidor.nomeCargo} />
-          <Field label="Órgão de lotação" value={servidor.orgaoLotacao} />
-          <Field label="Regime contratual" value={servidor.regimeContratual} />
-          <Field label="Data de admissão" value={formatDate(servidor.dataAdmissao)} />
+ 
+        <Section title="Identificação">
+          <Field label="Matrícula" value={s.matricula} mono />
+          <Field label="Sexo" value={s.sexo} />
+          <Field label="Deficiente físico" value={s.deficienteFisico} />
+          <Field label="Anos de serviço" value={s.anosServico} />
+          <Field label="Data de admissão" value={formatDate(s.dataAdmissao)} />
+          <Field label="Período de referência" value={s.periodo || `${s.mesReferencia}/${s.anoExercicio}`} />
+        </Section>
+
+        <Section title="Lotação e cargo">
+          <Field label="Cargo" value={s.nomeCargo} />
+          <Field label="Tipo de cargo" value={s.tipoCargo} />
+          <Field label="Situação" value={s.situacaoServidor} />
+          <Field label="Regime contratual" value={s.regimeContratual} />
+          <Field label="Carga horária" value={s.cargaHorariaServidor} />
+          <Field label="Escolaridade mínima" value={s.escolaridadeMinimaCargo} />
+          <Field label="Administração" value={s.administracao} />
+          <Field label="Poder" value={s.siglaPoder} />
+          <Field label="Órgão de lotação" value={s.orgaoLotacao} />
+          <Field label="Unidade de trabalho" value={s.nomeUnidadeTrabalho} />
+          <Field label="Órgão em disposição" value={s.nomeOrgaoDisposicao} />
+          <Field label="CNPJ do órgão" value={s.cnpjOrgao} mono />
         </Section>
 
         <Section title="Remuneração">
-          <Field label="Salário bruto" value={formatCurrency(servidor.valorBruto)} />
-          <Field label="Salário líquido" value={formatCurrency(servidor.valorLiquido)} />
+          <Field label="Vantagem fixa" value={formatCurrency(s.vantagemFixa)} />
+          <Field label="Vantagem variável" value={formatCurrency(s.vantagemVariavel)} />
+          <Field label="Redutor" value={formatCurrency(s.valorRedutor)} />
+          <Field label="Bruto" value={formatCurrency(s.valorBruto)} />
+          <Field label="Líquido" value={formatCurrency(s.valorLiquido)} />
+          <Field label="Faixa de remuneração" value={s.faixaRemuneracao} />
+        </Section>
+
+        <Section title="Descontos">
+          <Field label="Previdência" value={formatCurrency(s.valorPrevidenciario)} />
+          <Field label="Imposto de renda" value={formatCurrency(s.valorIr)} />
+          <Field label="Desconto obrigatório" value={formatCurrency(s.descontoObrigatorio)} />
+          <Field label="Total de descontos" value={formatCurrency(s.valorDesconto)} />
+          <Field label="Descontos (%)" value={s.descontosPercentual ? `${s.descontosPercentual}%` : undefined} />
         </Section>
 
       </div>

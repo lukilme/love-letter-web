@@ -67,7 +67,6 @@ export function ServidoresTableBody({ rows }: Props) {
         ))}
       </ul>
 
-      {/* ── Desktop: tabela completa ────────────────────────────────── */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full">
           <thead>
