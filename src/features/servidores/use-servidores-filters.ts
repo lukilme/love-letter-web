@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import type { Servidor, FilterOptions } from "@/types/servidor";
 import { EMPTY_FILTERS } from "@/types/servidor";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 20;
 
 type UseServidoresFiltersResult = {
   filters: FilterOptions;
